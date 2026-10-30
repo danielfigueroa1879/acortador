@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Link2, LayoutDashboard, LogOut } from 'lucide-react';
-import ThemeToggle from '@/components/ThemeToggle';
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -41,7 +40,6 @@ export default function TopBar() {
         <nav className="flex items-center gap-0.5 sm:gap-1">
           {item('/', 'Generar', Link2)}
           {item('/admin', 'Dashboard', LayoutDashboard)}
-          <ThemeToggle />
           <button
             onClick={logout}
             className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-zinc-500 sm:px-3 transition hover:bg-zinc-900 hover:text-rose-400"
