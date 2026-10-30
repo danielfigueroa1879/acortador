@@ -224,7 +224,8 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
   const maxDevice = stats.deviceList[0]?.total || 0;
 
   return (
-    <div className="space-y-5 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+    <>
+    <div className="space-y-5 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 lg:col-span-7">
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -418,9 +419,13 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               )}
             </div>
           </div>
+        </>
+      )}
+    </div>
 
-          {/* Historial */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-950/50">
+    {/* Historial: ocupa todo el ancho, debajo de la lista y el detalle */}
+    {!(loading && !clicks.length) && (
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 lg:col-span-12">
             <h3 className="flex items-center gap-2 border-b border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200">
               <Clock className="h-4 w-4 text-emerald-400" /> Historial de clics
               <span className="text-xs font-normal text-zinc-500">({visible.length})</span>
@@ -428,7 +433,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
             {visible.length === 0 ? (
               <p className="px-4 py-8 text-center text-sm text-zinc-600">Aún no hay clics.</p>
             ) : (
-              <div className="scroll-thin max-h-[28rem] overflow-auto">
+              <div className="scroll-thin max-h-[70vh] overflow-auto">
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead className="sticky top-0 bg-zinc-950 text-xs uppercase tracking-wider text-zinc-500">
                     <tr>
@@ -476,9 +481,8 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               </div>
             )}
           </div>
-        </>
-      )}
-    </div>
+    )}
+    </>
   );
 }
 
@@ -650,7 +654,9 @@ export default function AdminPage() {
           </section>
 
           {/* ----- Detalle ----- */}
-          <section className={`lg:col-span-7 ${selected ? '' : 'hidden lg:block'}`}>
+          {/* Con un enlace seleccionado la sección se "disuelve" (display: contents) para que
+              el detalle y el historial se ubiquen directamente en la grilla. */}
+          <section className={selected ? 'contents' : 'hidden lg:col-span-7 lg:block'}>
             {selected ? (
               <LinkDetail
                 key={selected.id}
