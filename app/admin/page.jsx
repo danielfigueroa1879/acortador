@@ -612,13 +612,13 @@ export default function AdminPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar alias o URL…"
-                  className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-base text-zinc-100 sm:text-sm placeholder-zinc-600 outline-none focus:border-cyan-500"
+                  className="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2 pl-9 pr-3 text-base text-zinc-100 sm:text-sm placeholder-zinc-600 outline-none focus:border-cyan-500"
                 />
               </div>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-2 text-base text-zinc-200 outline-none focus:border-cyan-500 sm:px-3 sm:text-sm"
+                className="rounded-lg border border-zinc-800 bg-zinc-950 px-2 text-base text-zinc-200 outline-none focus:border-cyan-500 sm:px-3 sm:text-sm"
               >
                 <option value="all">Todos</option>
                 <option value="active">Activos</option>
