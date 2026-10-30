@@ -1,5 +1,4 @@
 import { Clock, Ban, SearchX, AlertTriangle } from 'lucide-react';
-import ThemeToggle from '@/components/ThemeToggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +37,6 @@ export default async function ExpiredPage({ searchParams }) {
 
   return (
     <main className="flex min-h-dvh items-center justify-center px-4 py-10">
-      <ThemeToggle className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))]" />
       <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 text-center shadow-2xl sm:p-8">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800/70">
           <Icon className="h-7 w-7 text-amber-400" />

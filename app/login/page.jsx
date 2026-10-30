@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Loader2 } from 'lucide-react';
-import ThemeToggle from '@/components/ThemeToggle';
 
 function LoginForm() {
   const router = useRouter();
@@ -77,7 +76,6 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <main className="flex min-h-dvh items-center justify-center px-4 py-10">
-      <ThemeToggle className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))]" />
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>
