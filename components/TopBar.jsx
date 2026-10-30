@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Link2, LayoutDashboard, LogOut, Scissors } from 'lucide-react';
+import { Link2, LayoutDashboard, LogOut } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 
 export default function TopBar() {
@@ -34,9 +34,8 @@ export default function TopBar() {
     <header className="sticky top-0 z-20 border-b border-zinc-800/80 bg-(--app-bg)/85 pt-[env(safe-area-inset-top)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/15">
-            <Scissors className="h-4 w-4 text-cyan-400" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/favicon-96x96.png" alt="" width={32} height={32} className="h-8 w-8 rounded-lg" />
           <span className="font-semibold tracking-tight text-zinc-100 max-[359px]:hidden">Acortador</span>
         </Link>
         <nav className="flex items-center gap-0.5 sm:gap-1">
