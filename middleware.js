@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
-import { SESSION_COOKIE, isValidSession } from '@/lib/auth';
+import { SESSION_COOKIE } from '@/lib/auth';
 
 /**
- * Protege el generador (/), el dashboard (/admin) y la API de gestión.
- * Los enlaces cortos (/[slug]) y /expired quedan públicos.
+ * Filtro rápido de navegación: si no existe la cookie de sesión, manda a /login.
+ * NO valida la firma aquí, porque en Netlify el middleware corre en Edge y puede
+ * no tener acceso a ADMIN_PASSWORD / SESSION_SECRET.
+ * La validación real se hace en cada ruta /api/links/* (runtime Node) con
+ * requireSession(); sin sesión válida la API no entrega ni modifica nada.
  */
-export async function middleware(request) {
+export function middleware(request) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
-  if (await isValidSession(token)) return NextResponse.next();
+  if (token) return NextResponse.next();
 
   const { pathname, search } = request.nextUrl;
 
