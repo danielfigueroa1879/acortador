@@ -69,12 +69,12 @@ function StatusBadge({ status }) {
 
 function StatCard({ icon: Icon, label, value, accent = 'text-cyan-400' }) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-4">
-      <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-500">
-        <Icon className={`h-3.5 w-3.5 ${accent}`} />
-        {label}
+    <div className="min-w-0 rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 sm:p-4">
+      <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-500 sm:text-xs">
+        <Icon className={`h-3.5 w-3.5 shrink-0 ${accent}`} />
+        <span className="truncate">{label}</span>
       </div>
-      <div className="text-2xl font-semibold tabular-nums text-zinc-100">{value}</div>
+      <div className="text-xl font-semibold tabular-nums text-zinc-100 sm:text-2xl">{value}</div>
     </div>
   );
 }
@@ -220,12 +220,31 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
     };
   }, [visible, clicks]);
 
+  // Datos derivados por fila, compartidos por la vista de tarjetas y la tabla
+  const rows = useMemo(
+    () =>
+      visible.map((c) => {
+        let ref = 'Directo';
+        if (c.referrer) {
+          try { ref = new URL(c.referrer).hostname; } catch { ref = c.referrer; }
+        }
+        return {
+          ...c,
+          ref,
+          ua: parseUserAgent(c.user_agent),
+          Icon: DEVICE_ICON[c.device_type] || Monitor,
+          place: [c.city, c.region, c.country].filter(Boolean).join(', ') || '—',
+        };
+      }),
+    [visible]
+  );
+
   const maxCountry = stats.countryList[0]?.total || 0;
   const maxDevice = stats.deviceList[0]?.total || 0;
 
   return (
     <>
-    <div className="space-y-5 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 lg:col-span-7">
+    <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-7">
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -234,7 +253,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
             <span className="text-xs text-zinc-500">Creado {formatDateTime(link.created_at)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <h2 className="mono truncate text-xl font-semibold text-zinc-100">/{link.slug}</h2>
+            <h2 className="mono truncate text-lg font-semibold text-zinc-100 sm:text-xl">/{link.slug}</h2>
             <button onClick={copy} className="rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400" title="Copiar URL corta">
               {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
             </button>
@@ -256,9 +275,9 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
       </div>
 
       {/* Controles */}
-      <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-950/50 p-4">
+      <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-950/50 p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <Clock className="h-4 w-4 text-zinc-500" />
             <span className="text-zinc-400">Tiempo restante:</span>
             <span className="mono font-medium text-zinc-100">
@@ -317,7 +336,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
         <StatCard icon={MousePointerClick} label="Clics" value={visible.length} />
         <StatCard icon={Users} label="IPs únicas" value={stats.uniqueIps} accent="text-violet-400" />
         <StatCard icon={Globe2} label="Países" value={stats.countryList.length} accent="text-emerald-400" />
@@ -332,7 +351,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
             onChange={(e) => setHideBots(e.target.checked)}
             className="h-4 w-4 accent-cyan-500"
           />
-          Ocultar bots (vistas previas de WhatsApp, Telegram, etc.)
+          Ocultar bots<span className="hidden sm:inline"> (vistas previas de WhatsApp, Telegram, etc.)</span>
         </label>
         <div className="flex gap-2">
           <button
@@ -359,7 +378,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
         <>
           {/* Geografía + dispositivos */}
           <div className="grid gap-4 md:grid-cols-5">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4 md:col-span-3">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-3 sm:p-4 md:col-span-3">
               <h3 className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-200">
                 <MapPin className="h-4 w-4 text-cyan-400" /> Desglose geográfico
               </h3>
@@ -393,7 +412,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               )}
             </div>
 
-            <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-4 md:col-span-2">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-3 sm:p-4 md:col-span-2">
               <h3 className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-200">
                 <Activity className="h-4 w-4 text-violet-400" /> Dispositivos
               </h3>
@@ -425,62 +444,77 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
 
     {/* Historial: ocupa todo el ancho, debajo de la lista y el detalle */}
     {!(loading && !clicks.length) && (
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 lg:col-span-12">
-            <h3 className="flex items-center gap-2 border-b border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200">
-              <Clock className="h-4 w-4 text-emerald-400" /> Historial de clics
-              <span className="text-xs font-normal text-zinc-500">({visible.length})</span>
-            </h3>
-            {visible.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-zinc-600">Aún no hay clics.</p>
-            ) : (
-              <div className="scroll-thin max-h-[70vh] overflow-auto">
-                <table className="w-full min-w-[760px] text-left text-sm">
-                  <thead className="sticky top-0 bg-zinc-950 text-xs uppercase tracking-wider text-zinc-500">
-                    <tr>
-                      <th className="px-4 py-2 font-medium">Fecha y hora</th>
-                      <th className="px-4 py-2 font-medium">IP</th>
-                      <th className="px-4 py-2 font-medium">Ubicación</th>
-                      <th className="px-4 py-2 font-medium">Dispositivo</th>
-                      <th className="px-4 py-2 font-medium">Origen</th>
+      <div className="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-900/50 lg:col-span-12">
+        <h3 className="flex items-center gap-2 border-b border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200">
+          <Clock className="h-4 w-4 text-emerald-400" /> Historial de clics
+          <span className="text-xs font-normal text-zinc-500">({visible.length})</span>
+        </h3>
+        {visible.length === 0 ? (
+          <p className="px-4 py-8 text-center text-sm text-zinc-600">Aún no hay clics.</p>
+        ) : (
+          <>
+            {/* Celulares y tablets: tarjetas */}
+            <ul className="scroll-thin max-h-[70dvh] divide-y divide-zinc-800/70 overflow-y-auto lg:hidden">
+              {rows.map((c) => (
+                <li key={c.id} className="space-y-1.5 px-4 py-3 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:space-y-0 sm:gap-y-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="mono text-xs text-zinc-300">{formatDateTime(c.clicked_at)}</span>
+                    <span className="flex shrink-0 items-center gap-1 text-xs capitalize text-zinc-400">
+                      <c.Icon className="h-3.5 w-3.5 text-zinc-500" /> {c.device_type || '—'}
+                    </span>
+                  </div>
+                  <p className="flex items-start gap-1.5 text-sm text-zinc-200">
+                    <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-500" />
+                    <span>{c.place}</span>
+                  </p>
+                  <p className="mono break-all text-xs text-zinc-500">{c.ip_address || '—'}</p>
+                  <p className="text-xs text-zinc-500">
+                    {c.ua.browser} / {c.ua.os} · <span className="break-all">{c.ref}</span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            {/* Escritorio: tabla */}
+            <div className="scroll-thin hidden max-h-[70vh] overflow-auto lg:block">
+              <table className="w-full min-w-[720px] text-left text-sm">
+                <thead className="sticky top-0 bg-zinc-950 text-xs uppercase tracking-wider text-zinc-500">
+                  <tr>
+                    <th className="px-4 py-2 font-medium">Fecha y hora</th>
+                    <th className="px-4 py-2 font-medium">IP</th>
+                    <th className="px-4 py-2 font-medium">Ubicación</th>
+                    <th className="px-4 py-2 font-medium">Dispositivo</th>
+                    <th className="px-4 py-2 font-medium">Origen</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-800/70">
+                  {rows.map((c) => (
+                    <tr key={c.id} className="hover:bg-zinc-900/60">
+                      <td className="mono whitespace-nowrap px-4 py-2 text-xs text-zinc-300">
+                        {formatDateTime(c.clicked_at)}
+                      </td>
+                      <td className="mono whitespace-nowrap px-4 py-2 text-xs text-zinc-400">
+                        {c.ip_address || '—'}
+                      </td>
+                      <td className="px-4 py-2 text-zinc-300">{c.place}</td>
+                      <td className="px-4 py-2" title={c.user_agent || ''}>
+                        <span className="flex flex-wrap items-center gap-x-1.5 text-zinc-300">
+                          <c.Icon className="h-3.5 w-3.5 text-zinc-500" />
+                          <span className="capitalize">{c.device_type || '—'}</span>
+                          <span className="text-xs text-zinc-500">· {c.ua.browser} / {c.ua.os}</span>
+                        </span>
+                      </td>
+                      <td className="max-w-[160px] truncate px-4 py-2 text-xs text-zinc-500" title={c.referrer || ''}>
+                        {c.ref}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-800/70">
-                    {visible.map((c) => {
-                      const ua = parseUserAgent(c.user_agent);
-                      const Icon = DEVICE_ICON[c.device_type] || Monitor;
-                      let ref = 'Directo';
-                      if (c.referrer) {
-                        try { ref = new URL(c.referrer).hostname; } catch { ref = c.referrer; }
-                      }
-                      return (
-                        <tr key={c.id} className="hover:bg-zinc-900/60">
-                          <td className="mono whitespace-nowrap px-4 py-2 text-xs text-zinc-300">
-                            {formatDateTime(c.clicked_at)}
-                          </td>
-                          <td className="mono whitespace-nowrap px-4 py-2 text-xs text-zinc-400">
-                            {c.ip_address || '—'}
-                          </td>
-                          <td className="px-4 py-2 text-zinc-300">
-                            {[c.city, c.region, c.country].filter(Boolean).join(', ') || '—'}
-                          </td>
-                          <td className="px-4 py-2" title={c.user_agent || ''}>
-                            <span className="flex items-center gap-1.5 text-zinc-300">
-                              <Icon className="h-3.5 w-3.5 text-zinc-500" />
-                              <span className="capitalize">{c.device_type || '—'}</span>
-                              <span className="text-xs text-zinc-500">· {ua.browser} / {ua.os}</span>
-                            </span>
-                          </td>
-                          <td className="max-w-[160px] truncate px-4 py-2 text-xs text-zinc-500" title={c.referrer || ''}>
-                            {ref}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
     )}
     </>
   );
@@ -555,36 +589,36 @@ export default function AdminPage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <main className="mx-auto max-w-7xl px-3 py-5 sm:px-4 sm:py-8">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-6 sm:gap-4">
           <div>
             <p className="mono mb-1 text-xs uppercase tracking-[0.25em] text-cyan-400/80">Monitoreo</p>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-100 sm:text-3xl">Dashboard de enlaces</h1>
           </div>
-          <div className="flex gap-6 text-sm">
+          <div className="flex gap-4 text-sm sm:gap-6">
             <div><span className="text-zinc-500">Enlaces </span><span className="font-semibold tabular-nums text-zinc-100">{totals.total}</span></div>
             <div><span className="text-zinc-500">Activos </span><span className="font-semibold tabular-nums text-emerald-300">{totals.active}</span></div>
             <div><span className="text-zinc-500">Clics </span><span className="font-semibold tabular-nums text-cyan-300">{totals.clicks}</span></div>
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-12">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
           {/* ----- Lista ----- */}
-          <section className={`lg:col-span-5 ${selected ? 'hidden lg:block' : ''}`}>
+          <section className={`min-w-0 lg:col-span-5 ${selected ? 'hidden lg:block' : ''}`}>
             <div className="mb-3 flex gap-2">
-              <div className="relative flex-1">
+              <div className="relative min-w-0 flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar alias o URL…"
-                  className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-sm text-zinc-100 placeholder-zinc-600 outline-none focus:border-cyan-500"
+                  className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-base text-zinc-100 sm:text-sm placeholder-zinc-600 outline-none focus:border-cyan-500"
                 />
               </div>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 text-sm text-zinc-200 outline-none focus:border-cyan-500"
+                className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-2 text-base text-zinc-200 outline-none focus:border-cyan-500 sm:px-3 sm:text-sm"
               >
                 <option value="all">Todos</option>
                 <option value="active">Activos</option>
@@ -612,7 +646,7 @@ export default function AdminPage() {
               ) : filtered.length === 0 ? (
                 <p className="py-16 text-center text-sm text-zinc-600">No hay enlaces que coincidan.</p>
               ) : (
-                <ul className="scroll-thin max-h-[calc(100vh-15rem)] divide-y divide-zinc-800/80 overflow-y-auto">
+                <ul className="scroll-thin max-h-[calc(100dvh-15rem)] divide-y divide-zinc-800/80 overflow-y-auto">
                   {filtered.map((l) => {
                     const st = linkStatus(l, now);
                     const isSel = l.id === selectedId;
