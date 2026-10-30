@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Loader2 } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 function LoginForm() {
   const router = useRouter();
@@ -35,7 +36,7 @@ function LoginForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900/60 p-8 shadow-2xl"
+      className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 shadow-2xl sm:p-8"
     >
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
@@ -64,7 +65,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 px-4 py-3 font-semibold text-zinc-950 transition hover:bg-cyan-400 disabled:opacity-60"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 px-4 py-3 font-semibold text-black transition hover:bg-cyan-400 disabled:opacity-60"
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         Ingresar
@@ -75,7 +76,8 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-10">
+      <ThemeToggle className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))]" />
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>

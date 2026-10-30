@@ -112,25 +112,25 @@ export default function GeneratorPage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-        <div className="mb-10">
+      <main className="mx-auto max-w-5xl px-3 py-6 sm:px-4 sm:py-10 lg:py-14">
+        <div className="mb-6 sm:mb-10">
           <p className="mono mb-2 text-xs uppercase tracking-[0.25em] text-cyan-400/80">
             Generador
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-100 sm:text-3xl lg:text-4xl">
             Acorta, comparte y rastrea
           </h1>
-          <p className="mt-2 max-w-2xl text-zinc-400">
+          <p className="mt-2 max-w-2xl text-sm text-zinc-400 sm:text-base">
             Crea un enlace corto con caducidad y código QR. Cada visita queda registrada con fecha,
             hora, ubicación y dispositivo.
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-5">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-5">
           {/* --------- Formulario --------- */}
           <form
             onSubmit={onSubmit}
-            className="space-y-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 lg:col-span-3"
+            className="space-y-5 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-6 sm:p-6 md:col-span-3"
           >
             <div>
               <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-400">
@@ -162,7 +162,7 @@ export default function GeneratorPage() {
                   type="text"
                   value={alias}
                   onChange={(e) => setAlias(e.target.value.replace(/[^A-Za-z0-9_-]/g, ''))}
-                  placeholder="vacio = aleatorio de 6 caracteres"
+                  placeholder="vacío = aleatorio"
                   maxLength={64}
                   className="mono w-full bg-transparent px-4 py-3 text-zinc-100 placeholder-zinc-600 outline-none"
                 />
@@ -213,7 +213,7 @@ export default function GeneratorPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 font-semibold text-zinc-950 transition hover:bg-cyan-400 disabled:opacity-60"
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 font-semibold text-black transition hover:bg-cyan-400 disabled:opacity-60"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 Generar enlace
@@ -231,10 +231,10 @@ export default function GeneratorPage() {
           </form>
 
           {/* --------- Resultado --------- */}
-          <section className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 lg:col-span-2">
+          <section className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:p-6 md:col-span-2">
             {!result ? (
-              <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center">
-                <div className="mb-4 grid h-40 w-40 grid-cols-5 gap-1 rounded-xl border border-dashed border-zinc-700 p-4 opacity-40">
+              <div className="flex h-full min-h-[240px] flex-col items-center justify-center text-center sm:min-h-[320px]">
+                <div className="mb-4 grid h-32 w-32 grid-cols-5 sm:h-40 sm:w-40 gap-1 rounded-xl border border-dashed border-zinc-700 p-4 opacity-40">
                   {Array.from({ length: 25 }).map((_, i) => (
                     <div
                       key={i}
@@ -258,15 +258,15 @@ export default function GeneratorPage() {
                       href={result.short_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="mono flex-1 truncate px-4 py-3 text-cyan-300 hover:underline"
+                      className="mono min-w-0 flex-1 truncate px-3 py-3 text-cyan-300 hover:underline sm:px-4"
                       title={result.short_url}
                     >
                       {result.short_url.replace(/^https?:\/\//, '')}
                     </a>
                     <button
                       onClick={copy}
-                      className={`flex items-center gap-1.5 px-4 text-sm font-medium transition ${
-                        copied ? 'bg-emerald-500 text-zinc-950' : 'bg-cyan-500 text-zinc-950 hover:bg-cyan-400'
+                      className={`flex shrink-0 items-center gap-1.5 px-3 text-sm font-medium transition sm:px-4 ${
+                        copied ? 'bg-emerald-500 text-black' : 'bg-cyan-500 text-black hover:bg-cyan-400'
                       }`}
                     >
                       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -276,7 +276,7 @@ export default function GeneratorPage() {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <div ref={svgWrapRef} className="rounded-xl bg-white p-3">
+                  <div ref={svgWrapRef} className="w-full max-w-[220px] rounded-xl bg-white p-3 [&>svg]:h-auto [&>svg]:w-full">
                     <QRCodeSVG value={result.short_url} size={200} level="M" marginSize={2} />
                   </div>
                   {/* Canvas oculto en alta resolución para PNG */}
@@ -308,12 +308,12 @@ export default function GeneratorPage() {
                   </div>
                   <div className="flex justify-between gap-4">
                     <dt className="shrink-0 text-zinc-500">Destino</dt>
-                    <dd className="truncate text-right">
+                    <dd className="min-w-0 truncate text-right">
                       <a
                         href={result.link.original_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-zinc-300 hover:text-cyan-300"
+                        className="inline-flex max-w-full items-center gap-1 text-zinc-300 hover:text-cyan-300"
                         title={result.link.original_url}
                       >
                         <span className="truncate">{result.link.original_url}</span>
