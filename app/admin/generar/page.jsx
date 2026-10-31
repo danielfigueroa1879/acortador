@@ -118,7 +118,7 @@ export default function GeneratorPage() {
             Generador
           </p>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-100 sm:text-3xl lg:text-4xl">
-            Acorta, comparte y rastrea
+            Acorta links
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400 sm:text-base">
             Crea un enlace corto con caducidad y código QR. Cada visita queda registrada con fecha,
