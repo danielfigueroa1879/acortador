@@ -24,7 +24,7 @@ function LoginForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
       const next = params.get('next');
-      router.replace(next && next.startsWith('/') && !next.startsWith('//') ? next : '/');
+      router.replace(next && next.startsWith('/') && !next.startsWith('//') ? next : '/admin/generar');
       router.refresh();
     } catch (err) {
       setError(err.message);

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { requireSession } from '@/lib/auth';
 import {
-  RESERVED_SLUGS,
+  isReservedSlug,
   SLUG_REGEX,
   computeExpiresAt,
   generateSlug,
@@ -75,7 +75,7 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    if (RESERVED_SLUGS.has(alias.toLowerCase())) {
+    if (isReservedSlug(alias)) {
       return NextResponse.json({ error: `"${alias}" es una ruta reservada` }, { status: 400 });
     }
 

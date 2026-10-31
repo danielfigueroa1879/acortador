@@ -1,4 +1,5 @@
 {
+  "id": "/admin/generar",
   "name": "Acortador",
   "short_name": "Acortador",
   "icons": [
@@ -15,9 +16,9 @@
       "purpose": "any"
     }
   ],
-  "start_url": "/",
+  "start_url": "/admin/generar",
+  "scope": "/admin",
   "theme_color": "#0a0b0f",
   "background_color": "#0a0b0f",
-  "display": "browser",
-  "handle_links": "not-preferred"
+  "display": "standalone"
 }
