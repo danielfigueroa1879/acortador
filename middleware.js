@@ -9,6 +9,9 @@ import { SESSION_COOKIE } from '@/lib/auth';
  * requireSession(); sin sesión válida la API no entrega ni modifica nada.
  */
 export function middleware(request) {
+  // El service worker de la app instalada debe poder descargarse siempre
+  if (request.nextUrl.pathname === '/admin/sw.js') return NextResponse.next();
+
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (token) return NextResponse.next();
 

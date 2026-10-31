@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Link2, LayoutDashboard, LogOut } from 'lucide-react';
+import InstallBanner from '@/components/InstallBanner';
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -15,7 +16,7 @@ export default function TopBar() {
   }
 
   const item = (href, label, Icon) => {
-    const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+    const active = pathname === href;
     return (
       <Link
         href={href}
@@ -30,15 +31,16 @@ export default function TopBar() {
   };
 
   return (
+    <>
     <header className="sticky top-0 z-20 border-b border-zinc-800/80 bg-(--app-bg)/85 pt-[env(safe-area-inset-top)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/admin/generar" className="flex items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/favicon-96x96.png" alt="" width={32} height={32} className="h-8 w-8 rounded-lg" />
           <span className="font-semibold tracking-tight text-zinc-100 max-[359px]:hidden">Acortador</span>
         </Link>
         <nav className="flex items-center gap-0.5 sm:gap-1">
-          {item('/', 'Generar', Link2)}
+          {item('/admin/generar', 'Generar', Link2)}
           {item('/admin', 'Dashboard', LayoutDashboard)}
           <button
             onClick={logout}
@@ -50,5 +52,7 @@ export default function TopBar() {
         </nav>
       </div>
     </header>
+      <InstallBanner />
+    </>
   );
 }
