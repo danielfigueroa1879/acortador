@@ -266,7 +266,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
 
   return (
     <>
-    <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-7">
+    <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-7 2xl:col-span-8">
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -653,8 +653,8 @@ export default function AdminPage() {
 
   return (
     <>
-      <TopBar />
-      <main className="mx-auto max-w-7xl px-3 py-5 sm:px-4 sm:py-8">
+      <TopBar wide />
+      <main className="mx-auto max-w-[1920px] px-3 py-5 sm:px-4 sm:py-8 lg:px-6 xl:px-8">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-6 sm:gap-4">
           <div>
             <p className="mono mb-1 text-xs uppercase tracking-[0.25em] text-cyan-400/80">Monitoreo</p>
@@ -669,7 +669,7 @@ export default function AdminPage() {
 
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
           {/* ----- Lista ----- */}
-          <section className={`min-w-0 lg:col-span-5 ${selected ? 'hidden lg:block' : ''}`}>
+          <section className={`min-w-0 lg:col-span-5 2xl:col-span-4 ${selected ? 'hidden lg:block' : ''}`}>
             <div className="mb-3 flex gap-2">
               <div className="relative min-w-0 flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
@@ -719,29 +719,54 @@ export default function AdminPage() {
                       <li key={l.id}>
                         <button
                           onClick={() => setSelectedId(l.id)}
-                          className={`w-full px-4 py-3 text-left transition ${
+                          className={`w-full px-4 py-3 text-left transition lg:px-3 lg:py-2 ${
                             isSel ? 'bg-cyan-500/10' : 'hover:bg-zinc-900/80'
                           }`}
                         >
-                          <div className="flex items-center justify-between gap-3">
-                            <span className={`mono truncate font-medium ${isSel ? 'text-cyan-300' : 'text-zinc-100'}`}>
-                              /{l.slug}
-                            </span>
-                            <StatusBadge status={st} />
+                          {/* Móvil / tablet: tarjeta de 3 líneas */}
+                          <div className="lg:hidden">
+                            <div className="flex items-center justify-between gap-3">
+                              <span className={`mono truncate font-medium ${isSel ? 'text-cyan-300' : 'text-zinc-100'}`}>
+                                /{l.slug}
+                              </span>
+                              <StatusBadge status={st} />
+                            </div>
+                            <p className="mt-0.5 truncate text-xs text-zinc-500">{l.original_url}</p>
+                            <div className="mt-2 flex items-center justify-between text-xs">
+                              <span className="text-zinc-500">{formatDateTime(l.created_at)}</span>
+                              <span className="flex items-center gap-3">
+                                <span className="mono flex items-center gap-1 text-zinc-400">
+                                  <Clock className="h-3 w-3" />
+                                  {st === 'inactive' ? '—' : formatRemaining(l.expires_at, now)}
+                                </span>
+                                <span className="mono flex items-center gap-1 text-cyan-300">
+                                  <MousePointerClick className="h-3 w-3" />
+                                  {l.human_clicks ?? l.total_clicks}
+                                </span>
+                              </span>
+                            </div>
                           </div>
-                          <p className="mt-0.5 truncate text-xs text-zinc-500">{l.original_url}</p>
-                          <div className="mt-2 flex items-center justify-between text-xs">
-                            <span className="text-zinc-500">{formatDateTime(l.created_at)}</span>
-                            <span className="flex items-center gap-3">
-                              <span className="mono flex items-center gap-1 text-zinc-400">
+
+                          {/* PC: fila compacta de 2 líneas */}
+                          <div className="hidden lg:block">
+                            <div className="flex items-center gap-2 text-xs">
+                              <span className={`mono min-w-0 flex-1 truncate text-sm font-medium ${isSel ? 'text-cyan-300' : 'text-zinc-100'}`}>
+                                /{l.slug}
+                              </span>
+                              <span className="mono flex shrink-0 items-center gap-1 text-zinc-400" title="Tiempo restante">
                                 <Clock className="h-3 w-3" />
                                 {st === 'inactive' ? '—' : formatRemaining(l.expires_at, now)}
                               </span>
-                              <span className="mono flex items-center gap-1 text-cyan-300">
+                              <span className="mono flex w-10 shrink-0 items-center justify-end gap-1 text-cyan-300" title="Clics">
                                 <MousePointerClick className="h-3 w-3" />
                                 {l.human_clicks ?? l.total_clicks}
                               </span>
-                            </span>
+                              <span className="shrink-0"><StatusBadge status={st} /></span>
+                            </div>
+                            <div className="mt-0.5 flex items-center gap-3 text-xs">
+                              <span className="min-w-0 flex-1 truncate text-zinc-500" title={l.original_url}>{l.original_url}</span>
+                              <span className="shrink-0 text-zinc-600">{formatDateTime(l.created_at)}</span>
+                            </div>
                           </div>
                         </button>
                       </li>
@@ -755,7 +780,7 @@ export default function AdminPage() {
           {/* ----- Detalle ----- */}
           {/* Con un enlace seleccionado la sección se "disuelve" (display: contents) para que
               el detalle y el historial se ubiquen directamente en la grilla. */}
-          <section className={selected ? 'contents' : 'hidden lg:col-span-7 lg:block'}>
+          <section className={selected ? 'contents' : 'hidden lg:col-span-7 lg:block 2xl:col-span-8'}>
             {selected ? (
               <LinkDetail
                 key={selected.id}
