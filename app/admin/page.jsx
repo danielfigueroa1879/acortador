@@ -312,7 +312,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               </div>
             </form>
           ) : (
-            <div className="mt-1 flex min-w-0 items-center gap-1">
+            <div className="mt-1 flex min-w-0 items-center gap-3">
               <a
                 href={link.original_url}
                 target="_blank"
@@ -326,10 +326,10 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               <button
                 onClick={startEditUrl}
                 disabled={!!busy}
-                className="shrink-0 rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400 disabled:opacity-50"
+                className="shrink-0 rounded-md p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400 disabled:opacity-50"
                 title="Cambiar enlace de destino"
               >
-                <Pencil className="h-3.5 w-3.5" />
+                <Pencil className="h-4 w-4" />
               </button>
             </div>
           )}
