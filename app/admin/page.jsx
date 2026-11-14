@@ -268,75 +268,77 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
     <>
     <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-6 xl:col-span-5">
       {/* Cabecera */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="mb-1 flex items-center gap-2">
-            <StatusBadge status={status} />
-            <span className="text-xs text-zinc-500">Creado {formatDateTime(link.created_at)}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <h2 className="mono truncate text-lg font-semibold text-zinc-100 sm:text-xl">/{link.slug}</h2>
-            <button onClick={copy} className="rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400" title="Copiar URL corta">
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
-            </button>
-          </div>
-          {editingUrl ? (
-            <form onSubmit={saveUrl} className="mt-2 space-y-2">
-              <input
-                type="text"
-                inputMode="url"
-                autoFocus
-                value={urlDraft}
-                onChange={(e) => setUrlDraft(e.target.value)}
-                onKeyDown={(e) => e.key === 'Escape' && setEditingUrl(false)}
-                placeholder="https://nuevo-destino.com/..."
-                className="mono w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-cyan-500"
-              />
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  disabled={!!busy}
-                  className="flex items-center gap-1.5 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-50"
-                >
-                  {busy === 'url' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                  Guardar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingUrl(false)}
-                  disabled={busy === 'url'}
-                  className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 transition hover:text-zinc-200 disabled:opacity-50"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="mt-1 flex min-w-0 items-center gap-6">
-              <a
-                href={link.original_url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex min-w-0 items-center gap-1 text-sm text-zinc-400 hover:text-cyan-300"
-                title={link.original_url}
-              >
-                <span className="truncate">{link.original_url}</span>
-                <ExternalLink className="h-3 w-3 shrink-0" />
-              </a>
-              <button
-                onClick={startEditUrl}
-                disabled={!!busy}
-                className="shrink-0 rounded-md p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400 disabled:opacity-50"
-                title="Cambiar enlace de destino"
-              >
-                <Pencil className="h-4 w-4" />
+      <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2">
+              <StatusBadge status={status} />
+              <span className="text-xs text-zinc-500">Creado {formatDateTime(link.created_at)}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <h2 className="mono truncate text-lg font-semibold text-zinc-100 sm:text-xl">/{link.slug}</h2>
+              <button onClick={copy} className="rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400" title="Copiar URL corta">
+                {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
               </button>
             </div>
-          )}
+          </div>
+          <button onClick={onClose} className="shrink-0 rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200" title="Cerrar">
+            <X className="h-4 w-4" />
+          </button>
         </div>
-        <button onClick={onClose} className="rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200">
-          <X className="h-4 w-4" />
-        </button>
+        {editingUrl ? (
+          <form onSubmit={saveUrl} className="mt-2 space-y-2">
+            <input
+              type="text"
+              inputMode="url"
+              autoFocus
+              value={urlDraft}
+              onChange={(e) => setUrlDraft(e.target.value)}
+              onKeyDown={(e) => e.key === 'Escape' && setEditingUrl(false)}
+              placeholder="https://nuevo-destino.com/..."
+              className="mono w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-base text-zinc-100 sm:text-sm outline-none focus:border-cyan-500"
+            />
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={!!busy}
+                className="flex items-center gap-1.5 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-50"
+              >
+                {busy === 'url' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                Guardar
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditingUrl(false)}
+                disabled={busy === 'url'}
+                className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 transition hover:text-zinc-200 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="mt-1 flex items-center gap-4">
+            <a
+              href={link.original_url}
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-w-0 flex-1 items-center gap-1 text-sm text-zinc-400 hover:text-cyan-300"
+              title={link.original_url}
+            >
+              <span className="truncate">{link.original_url}</span>
+              <ExternalLink className="h-3 w-3 shrink-0" />
+            </a>
+            <button
+              onClick={startEditUrl}
+              disabled={!!busy}
+              className="shrink-0 rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400 disabled:opacity-50"
+              title="Cambiar enlace de destino"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Controles */}
