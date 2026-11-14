@@ -16,6 +16,7 @@ import {
   MapPin,
   Monitor,
   MousePointerClick,
+  Pencil,
   Play,
   RefreshCw,
   Search,
@@ -112,6 +113,8 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
   const [busy, setBusy] = useState('');
   const [hideBots, setHideBots] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [editingUrl, setEditingUrl] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(link.original_url);
 
   const status = linkStatus(link, now);
   const shortUrl = `${getBase()}/${link.slug}`;
@@ -138,6 +141,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
   async function patch(body, key) {
     setBusy(key);
     setError('');
+    let ok = false;
     try {
       const res = await fetch(`/api/links/${link.id}`, {
         method: 'PATCH',
@@ -147,11 +151,29 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error actualizando');
       onChanged(data.link);
+      ok = true;
     } catch (e) {
       setError(e.message);
     } finally {
       setBusy('');
     }
+    return ok;
+  }
+
+  function startEditUrl() {
+    setUrlDraft(link.original_url);
+    setError('');
+    setEditingUrl(true);
+  }
+
+  async function saveUrl(e) {
+    e.preventDefault();
+    const value = urlDraft.trim();
+    if (!value || value === link.original_url) {
+      setEditingUrl(false);
+      return;
+    }
+    if (await patch({ url: value }, 'url')) setEditingUrl(false);
   }
 
   async function remove() {
@@ -258,16 +280,59 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
-          <a
-            href={link.original_url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-1 flex items-center gap-1 truncate text-sm text-zinc-400 hover:text-cyan-300"
-            title={link.original_url}
-          >
-            <span className="truncate">{link.original_url}</span>
-            <ExternalLink className="h-3 w-3 shrink-0" />
-          </a>
+          {editingUrl ? (
+            <form onSubmit={saveUrl} className="mt-2 space-y-2">
+              <input
+                type="text"
+                inputMode="url"
+                autoFocus
+                value={urlDraft}
+                onChange={(e) => setUrlDraft(e.target.value)}
+                onKeyDown={(e) => e.key === 'Escape' && setEditingUrl(false)}
+                placeholder="https://nuevo-destino.com/..."
+                className="mono w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-cyan-500"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={!!busy}
+                  className="flex items-center gap-1.5 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-50"
+                >
+                  {busy === 'url' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingUrl(false)}
+                  disabled={busy === 'url'}
+                  className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 transition hover:text-zinc-200 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="mt-1 flex min-w-0 items-center gap-1">
+              <a
+                href={link.original_url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-w-0 items-center gap-1 text-sm text-zinc-400 hover:text-cyan-300"
+                title={link.original_url}
+              >
+                <span className="truncate">{link.original_url}</span>
+                <ExternalLink className="h-3 w-3 shrink-0" />
+              </a>
+              <button
+                onClick={startEditUrl}
+                disabled={!!busy}
+                className="shrink-0 rounded p-1 text-zinc-500 hover:bg-zinc-800 hover:text-cyan-400 disabled:opacity-50"
+                title="Cambiar enlace de destino"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
         </div>
         <button onClick={onClose} className="rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200">
           <X className="h-4 w-4" />

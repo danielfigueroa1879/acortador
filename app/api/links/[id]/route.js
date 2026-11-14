@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { requireSession } from '@/lib/auth';
-import { EXPIRATION_OPTIONS } from '@/lib/links';
+import { EXPIRATION_OPTIONS, normalizeUrl, publicBaseUrl } from '@/lib/links';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +13,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  *  { is_active: boolean }                 → activar / bloquear
  *  { extend: '1h'|'2h'|'24h'|'7d' }       → suma tiempo (desde ahora si ya expiró)
  *  { extend: 'never' }                    → lo deja permanente
+ *  { url: 'https://...' }                 → cambia el enlace de destino (mismo alias)
  */
 export async function PATCH(request, { params }) {
   const denied = await requireSession(request);
@@ -32,6 +33,17 @@ export async function PATCH(request, { params }) {
   const update = {};
 
   if (typeof body?.is_active === 'boolean') update.is_active = body.is_active;
+
+  if (body?.url !== undefined) {
+    const originalUrl = normalizeUrl(body.url);
+    if (!originalUrl) {
+      return NextResponse.json({ error: 'URL inválida. Debe ser http:// o https://' }, { status: 400 });
+    }
+    if (originalUrl.startsWith(publicBaseUrl(request) + '/')) {
+      return NextResponse.json({ error: 'No se puede apuntar a un enlace de este mismo dominio' }, { status: 400 });
+    }
+    update.original_url = originalUrl;
+  }
 
   if (body?.extend) {
     const opt = EXPIRATION_OPTIONS.find((o) => o.value === body.extend);
