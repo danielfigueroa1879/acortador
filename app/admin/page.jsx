@@ -312,7 +312,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
               </div>
             </form>
           ) : (
-            <div className="mt-1 flex min-w-0 items-center gap-3">
+            <div className="mt-1 flex min-w-0 items-center gap-6">
               <a
                 href={link.original_url}
                 target="_blank"
