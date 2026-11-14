@@ -266,7 +266,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
 
   return (
     <>
-    <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-7 2xl:col-span-8">
+    <div className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 sm:space-y-5 sm:p-5 lg:col-span-6 xl:col-span-5">
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
@@ -401,7 +401,7 @@ function LinkDetail({ link, onClose, onChanged, onDeleted }) {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3 lg:grid-cols-2 2xl:grid-cols-4">
         <StatCard icon={MousePointerClick} label="Clics" value={visible.length} />
         <StatCard icon={Users} label="IPs únicas" value={stats.uniqueIps} accent="text-violet-400" />
         <StatCard icon={Globe2} label="Países" value={stats.countryList.length} accent="text-emerald-400" />
@@ -669,7 +669,7 @@ export default function AdminPage() {
 
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
           {/* ----- Lista ----- */}
-          <section className={`min-w-0 lg:col-span-5 2xl:col-span-4 ${selected ? 'hidden lg:block' : ''}`}>
+          <section className={`min-w-0 lg:col-span-6 xl:col-span-7 ${selected ? 'hidden lg:block' : ''}`}>
             <div className="mb-3 flex gap-2">
               <div className="relative min-w-0 flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
@@ -780,7 +780,7 @@ export default function AdminPage() {
           {/* ----- Detalle ----- */}
           {/* Con un enlace seleccionado la sección se "disuelve" (display: contents) para que
               el detalle y el historial se ubiquen directamente en la grilla. */}
-          <section className={selected ? 'contents' : 'hidden lg:col-span-7 lg:block 2xl:col-span-8'}>
+          <section className={selected ? 'contents' : 'hidden lg:col-span-6 lg:block xl:col-span-5'}>
             {selected ? (
               <LinkDetail
                 key={selected.id}
