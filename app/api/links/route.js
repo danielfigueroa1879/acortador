@@ -7,17 +7,10 @@ import {
   computeExpiresAt,
   generateSlug,
   normalizeUrl,
-  cleanOrigin,
+  publicBaseUrl,
 } from '@/lib/links';
 
 export const dynamic = 'force-dynamic';
-
-// Prioridad: variable propia > URL principal que Netlify inyecta > dominio de la petición
-function baseUrl(request) {
-  return cleanOrigin(
-    process.env.NEXT_PUBLIC_BASE_URL || process.env.URL || new URL(request.url).origin
-  );
-}
 
 // GET /api/links → lista de enlaces con contador de clics
 export async function GET(request) {
@@ -52,7 +45,7 @@ export async function POST(request) {
     return NextResponse.json({ error: 'URL inválida. Debe ser http:// o https://' }, { status: 400 });
   }
 
-  const base = baseUrl(request);
+  const base = publicBaseUrl(request);
   if (originalUrl.startsWith(base + '/')) {
     return NextResponse.json({ error: 'No se puede acortar un enlace de este mismo dominio' }, { status: 400 });
   }
